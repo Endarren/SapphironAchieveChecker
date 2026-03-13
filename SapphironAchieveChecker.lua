@@ -12,8 +12,13 @@ NeooptionTable = {
 									desc = "Check the resistances of the raid group for frost",
 									type = "execute",
 									func ="RunCheck"
-						}
-				
+						},
+				tar =   {
+									name="Check targets resistances",
+									desc = "Check the resistances of the raid group for frost",
+									type = "execute",
+									func ="RunCheckTar"
+						},
 				
 				}
 			}
@@ -40,10 +45,69 @@ end
 function SapphironAchieveChecker:RunCheck()
 
 	members = GetNumRaidMembers();
-
+	
 	for i = 1, members do
 
-		base, total, bonus, minus =UnitResistance("raid"..tostring( i) ,4)
-		SendChatMessage(UnitName("raid"..tostring( i)).." has "..tostring(total).." frost resistance.", "RAID");
+		base, total, bonus, minus =UnitResistance(UnitName("raid"..tostring( i)) ,4)
+	
+		frostResist=0
+		for x=1,40 do 
+			local B,rank,icon,count,dis,dur,exp,caster=UnitBuff("raid"..i,x); 
+			if B then 
+
+				if B == "Mage Armor" then
+					frostResist=frostResist+45
+					SendChatMessage(caster.." please switch your Armor", "RAID");
+				end
+				if B == "Mark of the Wild" then
+					frostResist=frostResist+97
+				end 
+				if B == "Resistance Aura" then
+					print("Resistance Aura casted by "..caster)
+					SendChatMessage(caster.." please remove your Resistance Aura", "RAID");
+				frostResist=frostResist+195
+				end
+				if B == "Elemental Resistance Totem" then
+				print("Elemental Resistance Totem casted by "..caster)
+					SendChatMessage(caster.." please remove your  Elemental Resistance Totem", "RAID");
+				frostResist=frostResist+195
+				end
+			end 
+		end
+		SendChatMessage(UnitName("raid"..tostring( i)).." has "..tostring(frostResist).." frost resistance.", "RAID");
 	end
+	
+end
+function SapphironAchieveChecker:RunCheckTar()
+
+
+		frostResist=0
+		for x=1,40 do 
+			local B,rank,icon,count,dis,dur,exp,caster=UnitBuff("target",x); 
+			if B then 
+	
+
+				if B == "Mage Armor" then
+					frostResist=frostResist+45
+					--SendChatMessage(caster.." please switch your Armor", "RAID");
+				end
+				if B == "Mark of the Wild" then
+					frostResist=frostResist+97
+
+				end 
+				if B == "Resistance Aura" then
+					print("Resistance Aura casted by "..caster)
+					--SendChatMessage(caster.." please remove your Resistance Aura", "RAID");
+				frostResist=frostResist+195
+				end
+				if B == "Elemental Resistance Totem" then
+				print("Elemental Resistance Totem casted by "..caster)
+					--SendChatMessage(caster.." please remove your  Elemental Resistance Totem", "RAID");
+				frostResist=frostResist+195
+				end
+			end 
+		end
+		print( UnitName("target").." has "..tostring(frostResist).." frost resistance.");
+	
+	
 end
