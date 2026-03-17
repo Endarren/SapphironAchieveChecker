@@ -1,6 +1,6 @@
-## Interface: 40300
+## Interface: 30405, 38000, 40402, 40300
 ## Title: SapphironAchieveChecker
-## Version: 1.0
+## Version: 1.4
 ## Author: Endarren
 
 embeds.xml
